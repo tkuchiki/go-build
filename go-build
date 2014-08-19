@@ -19,6 +19,13 @@ init() {
     fi
 }
 
+check_init() {
+    if [ ! -d "${GO_REPO_DIR}" ]; then
+        echo "First of all, run go-build init"
+        exit 1
+    fi
+}
+
 install() {
     _VERSION="${1}"
     _DIR="${2}"
@@ -128,12 +135,15 @@ case "${1}" in
         init "${2}"
         ;;
     install)
+        check_init
         install "${2}" "${3}"
         ;;
     versions)
+        check_init
         versions "${2}"
         ;;
     upgrade)
+        check_init
         upgrade "${2}"
         ;;
     *)
