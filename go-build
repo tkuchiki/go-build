@@ -1,0 +1,118 @@
+#!/bin/bash
+
+GOBUILD_ROOT="__GOBUILD_ROOT__"
+cd $GOBUILD_ROOT
+
+GO_REPO_URI="https://go.googlecode.com/hg/"
+GO_REPO_DIR="${GOBUILD_ROOT}/golang"
+
+if [ ! -d "${GO_REPO_DIR}" ]; then
+    hg clone $GO_REPO_URI $GO_REPO_DIR
+fi
+
+install() {
+    _VERSION="${1}"
+    _DIR="${2}"
+
+    if [ "${_VERSION}" = "help" ]; then
+        install_usage
+    fi
+
+    [ ! -d "${_DIR}" ] && mkdir -p ${_DIR}
+
+    cd $GO_REPO_DIR
+    hg update $_VERSION
+    cd ./src
+
+    export GOROOT=$_DIR
+    export GOBIN="${_DIR}/bin"
+
+    ./make.bash
+}
+
+versions() {
+    _OPT="${1}"
+
+    if [ "${_OPT}" = "help" ]; then
+        versions_usage
+    fi
+    
+    cd $GO_REPO_DIR
+    if [ "${_OPT}" = "all" ]; then
+        hg tags | awk '{print $1}'
+    else
+        hg tags | awk '{print $1}' | grep ^go
+    fi
+}
+
+upgrade() {
+    if [ "${1}" = "help" ]; then
+        upgrade_usage
+    fi
+    
+    cd $GO_REPO_DIR
+    hg pull
+}
+
+usage() {
+    echo "Usage: $(basename $0)
+
+Options:
+    install  install go
+    versions display versions
+    upgrade  upgrade go repository
+"
+    exit 1
+}
+
+install_usage() {
+    echo "Usage: $(basename $0) install VERSION INSTALL_PATH
+
+Install go 
+
+VERSION      go version
+INSTALL_PATH path to install dir
+
+Options:
+    help Show this help message
+"
+    exit 1
+}
+
+versions_usage() {
+    echo "Usage: $(basename $0) versions [all]
+
+Show go versions
+
+Options:
+    help Show this help message
+    all  Show all versions
+"
+    exit 1
+}
+
+upgrade_usage() {
+            echo "Usage: $(basename $0) upgrade
+
+Execute hg pull
+
+Options:
+    help Show this help message
+"
+    exit 1
+}
+
+case "${1}" in
+    install)
+        install "${2}" "${3}"
+        ;;
+    versions)
+        versions "${2}"
+        ;;
+    upgrade)
+        upgrade "${2}"
+        ;;
+    *)
+        usage
+        ;;
+esac
