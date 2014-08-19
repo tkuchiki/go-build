@@ -6,9 +6,18 @@ cd $GOBUILD_ROOT
 GO_REPO_URI="https://go.googlecode.com/hg/"
 GO_REPO_DIR="${GOBUILD_ROOT}/golang"
 
-if [ ! -d "${GO_REPO_DIR}" ]; then
-    hg clone $GO_REPO_URI $GO_REPO_DIR
-fi
+init() {
+    if [ "${1}" = "help" ]; then
+        init_usage
+    fi
+    
+    if [ ! -d "${GO_REPO_DIR}" ]; then
+        hg clone $GO_REPO_URI $GO_REPO_DIR
+    else
+        echo "aleady initialized"
+        exit 1
+    fi
+}
 
 install() {
     _VERSION="${1}"
@@ -58,9 +67,21 @@ usage() {
     echo "Usage: $(basename $0)
 
 Options:
+    init     initialize go-build
     install  install go
     versions display versions
     upgrade  upgrade go repository
+"
+    exit 1
+}
+
+init_usage() {
+            echo "Usage: $(basename $0) init
+
+Execute hg pull ${GO_REPO_URI}
+
+Options:
+    help Show this help message
 "
     exit 1
 }
@@ -103,6 +124,9 @@ Options:
 }
 
 case "${1}" in
+    init)
+        init "${2}"
+        ;;
     install)
         install "${2}" "${3}"
         ;;
