@@ -4,7 +4,7 @@ GIT_REPO="https://github.com/tkuchiki/go-build"
 GOBUILD_ROOT="${GOBUILD_ROOT:-/usr/local/go-build}"
 GOBUILD_BIN="${GOBUILD_BIN:-/usr/local/bin}"
 
-if [ -d "${GOBUILD_ROOT}" ]; then
+if [ ! -d "${GOBUILD_ROOT}" ]; then
     git clone $GIT_REPO $GOBUILD_ROOT
 fi
 
