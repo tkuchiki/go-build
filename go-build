@@ -44,6 +44,9 @@ install() {
     export GOROOT=$_DIR
     export GOBIN="${_DIR}/bin"
 
+    echo "Installing ${_VERSION}..."
+    echo
+    
     ./make.bash
 }
 
