@@ -79,8 +79,8 @@ upgrade() {
         self)
             cd $GOBUILD_ROOT
             git pull
-            export $GOBUILD_ROOT
-            export $GOBUILD_BIN
+            export GOBUILD_ROOT
+            export GOBUILD_BIN
             cat install-go-build | bash
             ;;
         *)
