@@ -8,3 +8,4 @@ git clone $GIT_REPO $GOBUILD_ROOT
 cd $GOBUILD_ROOT
 cp ./go-build $GOBUILD_BIN
 sed -i"" -e "s|__GOBUILD_ROOT__|${GOBUILD_ROOT}|" $GOBUILD_BIN/go-build
+sed -i"" -e "s|__GOBUILD_BIN__|${GOBUILD_BIN}|" $GOBUILD_BIN/go-build
