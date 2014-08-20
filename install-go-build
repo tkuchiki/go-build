@@ -4,7 +4,10 @@ GIT_REPO="https://github.com/tkuchiki/go-build"
 GOBUILD_ROOT="${GOBUILD_ROOT:-/usr/local/go-build}"
 GOBUILD_BIN="${GOBUILD_BIN:-/usr/local/bin}"
 
-git clone $GIT_REPO $GOBUILD_ROOT
+if [ -d "${GOBUILD_ROOT}" ]; then
+    git clone $GIT_REPO $GOBUILD_ROOT
+fi
+
 cd $GOBUILD_ROOT
 cp ./go-build $GOBUILD_BIN
 sed -i"" -e "s|__GOBUILD_ROOT__|${GOBUILD_ROOT}|" $GOBUILD_BIN/go-build
